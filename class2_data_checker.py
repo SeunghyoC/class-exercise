@@ -2,7 +2,8 @@ import argparse
 import csv
 import sys
 from pathlib import Path
-
+#step1
+import logging
 
 def check_data(filename):
     """Read the CSV file and check for missing values."""
@@ -19,6 +20,16 @@ def check_data(filename):
             missing_rows.append(row_number)
 
     return header, data, missing_rows
+
+#step2
+# Set up logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)-8s %(message)s",
+    datefmt="%H:%M:%S"
+)
+# Create a module-level logger
+logger = logging.getLogger(__name__)
 
 # TODO 1: Create an ArgumentParser
 # Description: "Check the quality of a CSV file."
@@ -42,21 +53,45 @@ parser.add_argument("--output", "-o", default="data_quality.txt", help="Output r
 parser.add_argument("--verbose", "-v", action="store_true", help="Show detailed DEBUG messages")
 # TODO 5: Parse the command-line arguments
 args = parser.parse_args()
+#step3
+if args.verbose:
+    logger.setLevel(logging.DEBUG)
 
-# Check if the file exists 
+#step4
+#print Arguments parsed: filename=students.csv
+logger.debug(f"Arguments parsed: filename={args.input}")
+
+#step5
+# Check if the file exists
 p = Path(args.input)
 if not p.is_file():
-    print(f"File not found: '{args.input}'")
+    logger.error(f"File not found: '{args.input}'")
     sys.exit(1)
 
-print(f"File validated: '{args.input}'")
+logger.info(f"File validated: '{args.input}'")
 
+#step6
 # Check the data
-#header, data, missing_rows = check_data(args.filename) # args.input
+logger.debug(f"Loading data from: {args.input}")
 header, data, missing_rows = check_data(args.input)
+
+#step7
+logger.info(f"Loaded {len(data)} rows")
+
+#step8
+if len(data) == 0:
+    logger.error("Input file contains no data; cannot continue")
+    sys.exit(1)
+
+#step9
+for row_number in missing_rows:
+    logger.warning(f"Row {row_number} has missing values")
 
 # Save the report
 with open(args.output, "w") as f:
     f.write(f"Number of rows: {len(data)}\n")
     f.write(f"Number of columns: {len(header)}\n")
     f.write(f"Number of rows with missing values: {len(missing_rows)}\n")
+
+#step10
+logger.info(f"Report saved to {args.output}")
