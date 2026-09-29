@@ -21,7 +21,7 @@ def inspect_csv(filepath):
     # 2. Log the filepath at INFO.
     # 3. Print the first three rows (e.g. DataFrame.head(3))
     df = pd.read_csv(filepath)
-    logger.info(f"Inspecting CSV: {filepath}")
+    logger.info("Inspecting CSV: %s", {filepath})
     print(df.head(3))
 
 
@@ -34,7 +34,7 @@ def inspect_json(filepath):
     with open(filepath, "r") as f:
         data = json.load(f)
 
-    logger.info(f"Inspecting JSON: {filepath}")
+    logger.info("Inspecting JSON: %s", {filepath})
     print(data)
 
 
@@ -47,7 +47,7 @@ def inspect_yaml(filepath):
     with open(filepath, "r") as f:
         config = yaml.safe_load(f)
 
-    logger.info(f"Inspecting YAML: {filepath}")
+    logger.info("Inspecting YAML: %s", {filepath})
     print(config)
 
 
