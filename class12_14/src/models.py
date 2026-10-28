@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from pydantic import Field
 
 class MovieInput(BaseModel):
     title: str
@@ -16,3 +17,11 @@ class CSVInfo(BaseModel):
     columns: int
     column_names: list[str]
     dataset_id: int
+
+class ProcessingSettings(BaseModel):
+    remove_duplicates: bool = True
+    # TODO: Add drop_missing as a bool with default True.
+    drop_missing: bool = True
+
+class ProcessConfig(BaseModel):
+    processing: ProcessingSettings = Field(default_factory=ProcessingSettings)
